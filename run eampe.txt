@@ -1,0 +1,21 @@
+# Copy ai_helper.py to your project, then:
+from ai_helper import ask, code, analyze, summarize
+
+# Quick question
+answer = ask("What is recursion?")
+
+# Generate code
+snippet = code("Write a function to validate emails")
+
+# Analyze logs/data
+result = analyze(error_log)
+
+# Or use the full SDK
+from llm_client import LLM
+
+llm = LLM(
+    model="qwen2.5-coder:14b",
+    system_prompt="You are a senior developer",
+    temperature=0.3
+)
+response = llm.chat("How do I implement caching?")

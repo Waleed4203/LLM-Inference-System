@@ -1,0 +1,265 @@
+{
+  "info": {
+    "name": "LLM Inference System API",
+    "description": "Complete API collection for LLM Inference System with Ollama support",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "api_key",
+      "value": "test-key-123",
+      "type": "string"
+    },
+    {
+      "key": "task_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        },
+        "description": "Check if the system is running and ready"
+      }
+    },
+    {
+      "name": "2. Generate Text (Submit Request)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Save task_id for later use",
+              "var jsonData = pm.response.json();",
+              "pm.collectionVariables.set(\"task_id\", jsonData.task_id);",
+              "console.log(\"Task ID saved: \" + jsonData.task_id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"Explain quantum computing in simple terms\",\n  \"max_tokens\": 256,\n  \"temperature\": 0.7,\n  \"top_p\": 0.9,\n  \"user_id\": \"test-user\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/generate",
+          "host": ["{{base_url}}"],
+          "path": ["generate"]
+        },
+        "description": "Submit a text generation request. Returns task_id immediately."
+      }
+    },
+    {
+      "name": "3. Check Status",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/status/{{task_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["status", "{{task_id}}"]
+        },
+        "description": "Check if the task is queued, processing, or completed"
+      }
+    },
+    {
+      "name": "4. Get Result",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/result/{{task_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["result", "{{task_id}}"]
+        },
+        "description": "Get the generated text and metrics"
+      }
+    },
+    {
+      "name": "5. Generate - Code Example",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "pm.collectionVariables.set(\"task_id\", jsonData.task_id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"Write a Python function to reverse a string\",\n  \"max_tokens\": 200,\n  \"temperature\": 0.3\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/generate",
+          "host": ["{{base_url}}"],
+          "path": ["generate"]
+        },
+        "description": "Example: Generate code with lower temperature for more focused output"
+      }
+    },
+    {
+      "name": "6. Generate - Creative Writing",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "pm.collectionVariables.set(\"task_id\", jsonData.task_id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"Write a short story about a robot learning to paint\",\n  \"max_tokens\": 500,\n  \"temperature\": 1.0\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/generate",
+          "host": ["{{base_url}}"],
+          "path": ["generate"]
+        },
+        "description": "Example: Creative writing with higher temperature for more variety"
+      }
+    },
+    {
+      "name": "7. Generate - Chat Completion",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "pm.collectionVariables.set(\"task_id\", jsonData.task_id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"User: What is machine learning?\\nAssistant:\",\n  \"max_tokens\": 300,\n  \"temperature\": 0.7\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/generate",
+          "host": ["{{base_url}}"],
+          "path": ["generate"]
+        },
+        "description": "Example: Chat-style completion"
+      }
+    },
+    {
+      "name": "8. Metrics (Prometheus)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/metrics",
+          "host": ["{{base_url}}"],
+          "path": ["metrics"]
+        },
+        "description": "Get Prometheus metrics for monitoring"
+      }
+    },
+    {
+      "name": "9. Root Endpoint",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/",
+          "host": ["{{base_url}}"],
+          "path": [""]
+        },
+        "description": "Get API information"
+      }
+    }
+  ]
+}
